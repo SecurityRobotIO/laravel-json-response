@@ -11,5 +11,5 @@ jobs:
   include:
     - stage: test
       script:
-        - composer install
-        - ./vendor/bin/phpunit
+      - composer install
+      - ./vendor/bin/phpunit
