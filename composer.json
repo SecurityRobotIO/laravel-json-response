@@ -1,0 +1,25 @@
+{
+  "name": "ksbomj/json-response",
+  "description": "Small wrapper which standardize api responses",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Andrii Tarykin",
+      "email": "ksbomj@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "laravel/lumen-framework": "5.7.*",
+    "phpunit/phpunit": "6.*"
+  },
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "SecurityRobot\\" : "./src/",
+      "Tests\\": "tests/"
+    }
+  }
+}
