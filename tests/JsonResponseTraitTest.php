@@ -16,7 +16,7 @@ class JsonResponseTraitTest extends TestCase {
     {
         parent::setUp();
 
-        $this->trait = $this->getMockForTrait(JsonResponseTrait::class);
+        $this->trait = $this->getMockForTrait('SecurityRobot\JsonResponseTrait');
     }
 
     /**
