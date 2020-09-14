@@ -12,7 +12,7 @@ class JsonResponseTraitTest extends TestCase {
      */
     protected $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
