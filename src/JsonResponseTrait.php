@@ -1,7 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SecurityRobot;
 
-trait JsonErrorResponse {
+use Illuminate\Http\{Response, JsonResponse};
+
+trait JsonResponseTrait {
     /**
      * @var int HTTP status code
      *
@@ -142,5 +147,16 @@ trait JsonErrorResponse {
             'message' => $message,
             'errors'  => $validation_errors,
         ]);
+    }
+
+    /**
+     * Returns the empty response with 204 status code
+     *
+     * @see https://httpstatuses.com/204
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function successRequestWithNoData() {
+        return new Response(null, 204);
     }
 }

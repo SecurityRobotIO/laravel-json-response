@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
 use \Illuminate\Http\JsonResponse;
 use SecurityRobot\JsonResponseTrait;
@@ -16,7 +17,7 @@ class JsonResponseTraitTest extends TestCase {
     {
         parent::setUp();
 
-        $this->trait = $this->getMockForTrait('SecurityRobot\JsonResponseTrait');
+        $this->trait = $this->getMockForTrait(JsonResponseTrait::class);
     }
 
     /**
@@ -82,10 +83,8 @@ class JsonResponseTraitTest extends TestCase {
         $message = 'An error';
 
         $data = [
-            'error' => [
-                'http_code' => 200,
-                'message'   => $message
-            ]
+            'code'    => 200,
+            'message' => $message
         ];
 
         $response = $this->trait->respondWithError($message);
@@ -157,10 +156,8 @@ class JsonResponseTraitTest extends TestCase {
     public function assertErrors($call_method, $default_message, $http_code)
     {
         $data = [
-            'error' => [
-                'http_code' => $http_code,
-                'message'   => $default_message
-            ]
+            'code'    => $http_code,
+            'message' => $default_message
         ];
 
         $response = $this->trait->{$call_method}();
@@ -172,10 +169,8 @@ class JsonResponseTraitTest extends TestCase {
         $message = 'Custom message';
 
         $data = [
-            'error' => [
-                'http_code' => $http_code,
-                'message'   => $message
-            ]
+            'code' => $http_code,
+            'message'   => $message
         ];
 
         $response = $this->trait->{$call_method}($message);
@@ -183,5 +178,16 @@ class JsonResponseTraitTest extends TestCase {
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals($http_code, $response->getStatusCode());
         $this->assertEquals(json_encode($data), $response->content());
+    }
+
+	/**
+	 * @test
+	 */
+    public function it_tests_that_successRequestWithNoData_works() {
+	    $response = $this->trait->successRequestWithNoData();
+
+	    $this->assertInstanceOf(Response::class, $response);
+	    $this->assertEquals(204, $response->getStatusCode());
+	    $this->assertEquals('', $response->content());
     }
 }
