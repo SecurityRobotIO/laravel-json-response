@@ -1,34 +1,28 @@
 <?php
 namespace SecurityRobot;
 
-trait JsonResponseTrait
-{
+trait JsonErrorResponse {
     /**
-     * @var HTTP status code
+     * @var int HTTP status code
      *
      * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
      */
-    protected $status_code = 200;
+    protected $statusCode = 200;
 
     /**
-     * This method returns the HTTP status code
-     *
-     * @return string
+     * @return int
      */
-    public function getStatusCode()
-    {
-        return $this->status_code;
+    public function getStatusCode(): int {
+        return $this->statusCode;
     }
 
     /**
-     * This method sets the HTTP status code
+     * @param int $statusCode
      *
-     * @param integer $status_code HTTP status code
-     * @return JsonResponseTrait
+     * @return $this
      */
-    public function setStatusCode($status_code)
-    {
-        $this->status_code = $status_code;
+    public function setStatusCode(int $statusCode) {
+        $this->statusCode = $statusCode;
 
         return $this;
     }
@@ -37,10 +31,10 @@ trait JsonResponseTrait
      * Generates a Response with a 404 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function responseNotFound($message = 'Not Found!')
-    {
+    public function responseNotFound(string $message = 'Not Found!') {
         return $this->setStatusCode(404)->respondWithError($message);
     }
 
@@ -48,10 +42,10 @@ trait JsonResponseTrait
      * Generates a Response with a 400 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorWrongArgs($message = 'Wrong Arguments!')
-    {
+    public function errorWrongArgs(string $message = 'Wrong Arguments!') {
         return $this->setStatusCode(400)->respondWithError($message);
     }
 
@@ -59,10 +53,10 @@ trait JsonResponseTrait
      * Generates a Response with a 401 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorNotAuthorized($message = 'Not authorized!')
-    {
+    public function errorNotAuthorized(string $message = 'Not authorized!') {
         return $this->setStatusCode(401)->respondWithError($message);
     }
 
@@ -70,10 +64,10 @@ trait JsonResponseTrait
      * Generates a Response with a 403 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorForbidden($message = 'Forbidden!')
-    {
+    public function errorForbidden(string $message = 'Forbidden!') {
         return $this->setStatusCode(403)->respondWithError($message);
     }
 
@@ -81,10 +75,10 @@ trait JsonResponseTrait
      * Generates a Response with a 405 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorMethodNotAllowed($message = 'HTTP Method Not Allowed!')
-    {
+    public function errorMethodNotAllowed(string $message = 'HTTP Method Not Allowed!') {
         return $this->setStatusCode(405)->respondWithError($message);
     }
 
@@ -92,65 +86,61 @@ trait JsonResponseTrait
      * Generates a Response with a 429 HTTP header and a given message.
      *
      * @param string $message
-     * @return Http\JsonResponse
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorTooManyRequests($message = 'Too many requests')
-    {
-        return $this->setStatusCode(429)->respond([
-            'error' => [
-                'http_code' => $this->getStatusCode(),
-                'message'   => $message,
-            ]
-        ]);
+    public function errorTooManyRequests($message = 'Too many requests') {
+        return $this->setStatusCode(429)->respondWithError($message);
     }
 
     /**
      * Generates a Response with a 500 HTTP header and a given message.
      *
      * @param string $message
-     * @return void
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function errorInternalError($message = 'Internal Error!')
-    {
+    public function errorInternalError(string $message = 'Internal Error!') {
         return $this->setStatusCode(500)->respondWithError($message);
     }
 
     /**
      * @param array $data
      * @param array $headers
-     * @return Http\JsonResponse
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function respond($data, $headers = [])
-    {
-        return response()->json($data, $this->getStatusCode(), $headers);
+    public function respond($data, $headers = []) {
+        return new JsonResponse($data, $this->getStatusCode(), $headers);
     }
 
     /**
      * Method creates the error responds structure
      *
      * @param string $message The error message
-     * @return Http\JsonResponse
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function respondWithError($message)
-    {
+    public function respondWithError(string $message) {
         return $this->respond([
-            'error' => [
-                'http_code' => $this->getStatusCode(),
-                'message'   => $message,
-            ]
+            'code'    => $this->getStatusCode(),
+            'message' => $message,
         ]);
     }
 
     /**
-     * @param array $validation_errors
+     * @param array       $validation_errors
+     * @param string|null $message
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respondValidationErrors(array $validation_errors)
-    {
+    public function respondValidationErrors(array $validation_errors, string $message = null) {
         $this->setStatusCode(422);
 
         return $this->respond([
-            'errors' => $validation_errors
+            'code'    => $this->getStatusCode(),
+            'message' => $message,
+            'errors'  => $validation_errors,
         ]);
     }
 }
