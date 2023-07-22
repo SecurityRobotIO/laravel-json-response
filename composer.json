@@ -1,7 +1,7 @@
 {
   "name": "ksbomj/json-response",
   "description": "Small wrapper which standardize api responses",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "authors": [
     {
       "name": "Andrii Tarykin",
